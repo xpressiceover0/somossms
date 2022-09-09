@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  db:
+
+    image: mysql:5.7.32
+
+    container_name: mysqldb
+
+    ports:
+        - "33060:3306"
+
+    networks:
+        - local-net
+
+    tty: true
+
+    environment:
+        - MYSQL_ROOT_PASSWORD=Xpressiceover1
+        - MYSQL_DATABASE=somosdb
+        - MYSQL_USER=root
+
+    volumes:
+        - .mysql_data:/var/lib/mysql:rw
+
+  somosback:
+
+    links:
+        - db
+
+    build: .
+
+    container_name: python
+
+    ports:
+        - "8000:8000"
+
+    networks:
+        - local-net
+
+  
+
+    env_file:
+        - .env
+
+    depends_on:
+        - db
+
+networks:
+    local-net:
+        driver: bridge
+  
